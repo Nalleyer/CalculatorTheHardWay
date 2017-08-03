@@ -1,0 +1,14 @@
+ast -> assign | exp
+
+exp -> term
+    -> term op1 term
+
+term -> factor
+     -> factor op0 factor
+
+factor -> VAR
+       -> NUM
+       -> LP exp RP
+
+op1    -> ADD | SUB
+op0    -> MUL | DIV

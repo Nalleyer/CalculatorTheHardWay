@@ -1,0 +1,39 @@
+//
+// Created by Nalley on 2017/7/29.
+//
+#include <iostream>
+#include <string>
+#include <cassert>
+
+#include "lexer.h"
+
+using namespace std;
+
+int main() {
+
+    Lexer l;
+    assert( l.charType('\0') == CharType::END);
+    assert( l.charType(' ') == CharType::SPACE);
+    assert( l.charType('\n') == CharType::ENDL);
+    assert( l.charType('+') == CharType::ADD);
+    assert( l.charType('-') == CharType::SUB);
+    assert( l.charType('*') == CharType::MUL);
+    assert( l.charType('/') == CharType::DIV);
+    assert( l.charType('(') == CharType::LP);
+    assert( l.charType(')') == CharType::RP);
+    assert( l.charType('.') == CharType::POINT);
+    assert( l.charType('=') == CharType::ASN);
+    assert( l.charType('2') == CharType::NUM);
+    assert( l.charType('a') == CharType::WORD);
+    assert( l.charType('S') == CharType::WORD);
+    try
+    {
+        l.charType('?');
+    }
+    catch (std::invalid_argument e)
+    {
+        cout << e.what();
+    }
+
+    return 0;
+}
