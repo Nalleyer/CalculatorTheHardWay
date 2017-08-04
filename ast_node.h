@@ -11,22 +11,30 @@ class ASTNode
 {
 public:
     virtual void accept(std::weak_ptr<ASTVisitor> visitor) = 0;
-    ASTNode() = default;
-    virtual ~ ASTNode() = default;
+    ASTNode(void) = default;
+    virtual ~ ASTNode(void) = default;
+
+    size_t getLine(void);
+    size_t getColumn(void);
+
+protected:
+    size_t mLine;
+    size_t mColumn;
 };
 
 class ASTExp : public ASTNode
 {
-    ASTExp() = default;
-    virtual ~ ASTExp() = default;
+public:
+    ASTExp(void) = default;
+    virtual ~ ASTExp(void) = default;
 };
 
 class ASTOp : public ASTExp
 {
 public:
-    ASTOp() = default;
+    ASTOp(void) = default;
     ASTOp(std::shared_ptr<ASTExp> left, std::shared_ptr<ASTExp> right);
-    virtual ~ ASTOp() = default;
+    virtual ~ ASTOp(void) = default;
 
 protected:
     std::shared_ptr<ASTExp> mLeft;
@@ -36,33 +44,68 @@ protected:
 class ASTAdd : public ASTOp
 {
 public:
-    ASTAdd() = default;
+    ASTAdd(void) = default;
     ASTAdd(std::shared_ptr<ASTExp> left, std::shared_ptr<ASTExp> right);
-    virtual ~ ASTAdd() = default;
+    virtual ~ ASTAdd(void) = default;
 };
 
 class ASTSub : public ASTOp
 {
 public:
-    ASTSub() = default;
+    ASTSub(void) = default;
     ASTSub(std::shared_ptr<ASTExp> left, std::shared_ptr<ASTExp> right);
-    virtual ~ ASTSub() = default;
+    virtual ~ ASTSub(void) = default;
 };
 
 class ASTMul : public ASTOp
 {
 public:
-    ASTMul() = default;
+    ASTMul(void) = default;
     ASTMul(std::shared_ptr<ASTExp> left, std::shared_ptr<ASTExp> right);
-    virtual ~ ASTMul() = default;
+    virtual ~ ASTMul(void) = default;
 };
 
 class ASTDiv : public ASTOp
 {
 public:
-    ASTDiv() = default;
+    ASTDiv(void) = default;
     ASTDiv(std::shared_ptr<ASTExp> left, std::shared_ptr<ASTExp> right);
-    virtual ~ ASTDiv() = default;
+    virtual ~ ASTDiv(void) = default;
+};
+
+class ASTVar : public ASTNode
+{
+public:
+    ASTVar(void) = default;
+    ASTVar( const std::string &varName );
+    ASTVar( std::string &&varName);
+    virtual ~ ASTVar(void) = default;
+
+private:
+    std::string mVarName;
+};
+
+class ASTNum : public ASTNode
+{
+public:
+    ASTNum(void) = default;
+    ASTNum( const std::string &valueStr);
+    ASTNum( std::string &&valueStr);
+    virtual ~ ASTNum(void) = default;
+
+protected:
+    std::string mValueStr;
 };
 
 
+class ASTAssign: public ASTNode
+{
+public:
+    ASTAssign(void) = default;
+    ASTAssign( std::shared_ptr<ASTVar> left, std::shared_ptr<ASTExp> right);
+    virtual ~ ASTAssign(void) = default;
+
+protected:
+    std::shared_ptr<ASTVar> mLeft;
+    std::shared_ptr<ASTExp> mRight;
+};
