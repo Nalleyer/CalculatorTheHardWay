@@ -14,11 +14,11 @@ enum class TokenType;
 enum class State;
 struct pair_hash;
 
-using MapInType  = std::pair<State,CharType>;
-using MapOUtType = std::pair<State,TokenType>;
 
 class Lexer
 {
+    using MapInType  = std::pair<State,CharType>;
+    using MapOUtType = std::pair<State,TokenType>;
 public:
 
     void runLexer(const std::string & input);
@@ -29,7 +29,7 @@ public:
 
 private:
     std::vector<Token> mTokens;
-    static const std::unordered_map< MapInType, MapOUtType, pair_hash > mLexerTable;
+    static const std::unordered_map< Lexer::MapInType, Lexer::MapOUtType, pair_hash > mLexerTable;
     size_t mNumLine;
     size_t mColumn;
 

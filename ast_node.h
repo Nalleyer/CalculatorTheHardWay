@@ -6,16 +6,21 @@
 #include <memory>
 #include "ast_visitor.h"
 
+class Parser;
+
 /* with a visitor interface */
 class ASTNode
 {
 public:
-    virtual void accept(std::weak_ptr<ASTVisitor> visitor) = 0;
+    //! TODO: after completing visitor, enable this code.
+    //virtual void accept(std::weak_ptr<ASTVisitor> visitor) = 0;
     ASTNode(void) = default;
     virtual ~ ASTNode(void) = default;
 
     size_t getLine(void);
     size_t getColumn(void);
+
+    friend class Parser;
 
 protected:
     size_t mLine;
@@ -73,7 +78,7 @@ public:
     virtual ~ ASTDiv(void) = default;
 };
 
-class ASTVar : public ASTNode
+class ASTVar : public ASTExp
 {
 public:
     ASTVar(void) = default;
@@ -85,7 +90,7 @@ private:
     std::string mVarName;
 };
 
-class ASTNum : public ASTNode
+class ASTNum : public ASTExp
 {
 public:
     ASTNum(void) = default;

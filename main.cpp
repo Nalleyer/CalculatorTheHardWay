@@ -5,6 +5,7 @@
 #include <sstream>
 
 #include "lexer.h"
+#include "parser.h"
 
 using namespace std;
 
@@ -39,16 +40,19 @@ int main() {
 
     Lexer l;
     l.runLexer(ss.str());
-    auto out = l.getTokens();
+    auto tokenList = l.getTokens();
 
     cout << "done\n" ;
-    cout << "all " << out.size() << " tokens got\n";
+    cout << "all " << tokenList.size() << " tokens got\n";
 
     /* test for lexer */
-    for_each(out.begin(),out.end(), [](Token tk) {
-        cout << "{ " << tk.mTokenType << "," << ( tk.mValue == "\n" ? "\\n" : tk.mValue )
+    for_each(tokenList.begin(),tokenList.end(), [i = 0](Token tk) mutable {
+        cout << i++ << "\t{ " << tk.mTokenType << "," << ( tk.mValue == "\n" ? "\\n" : tk.mValue )
             << ", (" << tk.mLine << ", " << tk.mColumn << ") };\n";
     });
+
+    Parser p;
+    p.parse(tokenList);
 
     return 0;
 }

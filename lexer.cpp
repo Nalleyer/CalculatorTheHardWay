@@ -133,7 +133,7 @@ void Lexer::error(const std::string &info)
 }
 
 
-const std::unordered_map< MapInType, MapOUtType, pair_hash > Lexer::mLexerTable{
+const std::unordered_map< Lexer::MapInType, Lexer::MapOUtType, pair_hash > Lexer::mLexerTable{
         /* init */
         { {State::INIT, CharType::END},   {State::OVER, TokenType::NO_TOKEN}},
         { {State::INIT, CharType::SPACE}, {State::INIT,      TokenType::NO_TOKEN} },

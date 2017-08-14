@@ -10,9 +10,14 @@ ASTOp::ASTOp(std::shared_ptr<ASTExp> left, std::shared_ptr<ASTExp> right)
 {
 }
 
-ASTAdd::ASTAdd(std::shared_ptr<ASTExp> left, std::shared_ptr<ASTExp> right)
-    : ASTOp(left, right)
+size_t ASTNode::getLine()
 {
+    return mLine;
+}
+
+size_t ASTNode::getColumn()
+{
+    return mColumn;
 }
 
 ASTVar::ASTVar(std::string &&varName)
@@ -42,3 +47,25 @@ ASTAssign::ASTAssign(std::shared_ptr<ASTVar> left, std::shared_ptr<ASTExp> right
 {
 }
 
+ASTAdd::ASTAdd(std::shared_ptr<ASTExp> left, std::shared_ptr<ASTExp> right)
+    : ASTOp(left, right)
+{
+}
+
+ASTDiv::ASTDiv(std::shared_ptr<ASTExp> left, std::shared_ptr<ASTExp> right)
+    : ASTOp(left, right)
+{
+
+}
+
+ASTMul::ASTMul(std::shared_ptr<ASTExp> left, std::shared_ptr<ASTExp> right)
+   : ASTOp(left, right)
+{
+
+}
+
+ASTSub::ASTSub(std::shared_ptr<ASTExp> left, std::shared_ptr<ASTExp> right)
+   : ASTOp(left, right)
+{
+
+}
