@@ -89,7 +89,9 @@ Parser::P_AST Parser::getAssign(const Parser::TokenList &tokenList, size_t &i)
 Parser::P_Exp Parser::getExp(const Parser::TokenList &tokenList, size_t &i)
 {
     auto astTerm = getTerm(tokenList, i);
-    if ( tokenList[i].mTokenType == TokenType::ENDL)
+    /* end of term */
+    if (        tokenList[i].mTokenType == TokenType::ENDL
+            or tokenList[i].mTokenType == TokenType::RIGHT_PAR)
     {
         return astTerm;
     }
@@ -101,11 +103,11 @@ Parser::P_Exp Parser::getExp(const Parser::TokenList &tokenList, size_t &i)
         {
             /* exp -> term +/- term */
             nextToken(tokenList, i);
-            auto rightASTTerm = getTerm(tokenList, i);
+            auto rightASTExp = getExp(tokenList, i);
             if ( opToken.mTokenType == TokenType::ADD)
             {
                 auto astExp = std::make_shared<ASTAdd>(std::static_pointer_cast<ASTExp>(astTerm),
-                                                std::static_pointer_cast<ASTExp>(rightASTTerm));
+                                                       rightASTExp );
                 astExp -> mLine = astTerm -> mLine;
                 astExp -> mColumn = astTerm -> mColumn;
                 return astExp;
@@ -113,7 +115,7 @@ Parser::P_Exp Parser::getExp(const Parser::TokenList &tokenList, size_t &i)
             else
             {
                 auto astExp = std::make_shared<ASTSub>(std::static_pointer_cast<ASTExp>(astTerm),
-                                                       std::static_pointer_cast<ASTExp>(rightASTTerm));
+                                                       rightASTExp );
                 astExp -> mLine = astTerm -> mLine;
                 astExp -> mColumn = astTerm -> mColumn;
                 return astExp;
@@ -134,39 +136,31 @@ Parser::P_Exp Parser::getExp(const Parser::TokenList &tokenList, size_t &i)
 Parser::P_Exp Parser::getTerm(const Parser::TokenList &tokenList, size_t &i)
 {
     auto astFactor = getFactor(tokenList, i);
-    if ( i+1 < tokenList.size() )
-    {
-        auto opToken = unsafePeekNext(tokenList, i);
-        if (        opToken.mTokenType == TokenType::MUL
+    auto opToken = tokenList[i];
+    if (        opToken.mTokenType == TokenType::MUL
                 or  opToken.mTokenType == TokenType::DIV)
+    {
+        /* term -> factor muldiv factor */
+        nextToken(tokenList, i);
+        auto rightAstTerm = getTerm(tokenList, i);
+        if ( opToken.mTokenType == TokenType::MUL)
         {
-            /* term -> factor muldiv factor */
-            nextToken(tokenList, i);
-            auto rightAstFactor = getFactor(tokenList, i);
-            if ( opToken.mTokenType == TokenType::MUL)
-            {
-                auto astTerm = std::make_shared<ASTMul>(astFactor, rightAstFactor);
-                astTerm -> mLine = astFactor -> mLine;
-                astTerm -> mColumn = astFactor -> mColumn;
-                return astTerm;
-            }
-            else
-            {
-                auto astTerm = std::make_shared<ASTDiv>(astFactor, rightAstFactor);
-                astTerm -> mLine = astFactor -> mLine;
-                astTerm -> mColumn = astFactor -> mColumn;
-                return astTerm;
-            }
+            auto astTerm = std::make_shared<ASTMul>(astFactor, rightAstTerm);
+            astTerm -> mLine = astFactor -> mLine;
+            astTerm -> mColumn = astFactor -> mColumn;
+            return astTerm;
         }
         else
         {
-            /* term -> factor */
-            return astFactor;
+            auto astTerm = std::make_shared<ASTDiv>(astFactor, rightAstTerm);
+            astTerm -> mLine = astFactor -> mLine;
+            astTerm -> mColumn = astFactor -> mColumn;
+            return astTerm;
         }
     }
     else
     {
-        error("reached the end of token list before finishing parsing");
+        return astFactor;
     }
 }
 

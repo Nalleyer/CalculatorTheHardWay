@@ -4,8 +4,10 @@
 #include <fstream>
 #include <sstream>
 
-#include "lexer.h"
+#include "Lexer.h"
 #include "parser.h"
+
+#include "PrintVisitor.h"
 
 using namespace std;
 
@@ -53,6 +55,12 @@ int main() {
 
     Parser p;
     p.parse(tokenList);
+    auto prog = p.getProg();
+
+    PrintVisitor pv;
+    for_each(prog.begin(), prog.end(), [&](auto ast){
+        ast -> accept(pv);
+    });
 
     return 0;
 }

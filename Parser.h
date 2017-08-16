@@ -4,8 +4,8 @@
 
 #pragma once
 
-#include "ast_node.h"
-#include "lexer.h"
+#include "ASTNode.h"
+#include "Lexer.h"
 #include <memory>
 #include <vector>
 
@@ -47,5 +47,4 @@ private:
 
     void error(std::string const &info);
 };
-
 

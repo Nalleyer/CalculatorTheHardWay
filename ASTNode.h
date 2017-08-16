@@ -4,16 +4,15 @@
 #pragma once
 
 #include <memory>
-#include "ast_visitor.h"
 
 class Parser;
+class ASTVisitor;
 
 /* with a visitor interface */
-class ASTNode
+class ASTNode : public std::enable_shared_from_this<ASTNode>
 {
 public:
-    //! TODO: after completing visitor, enable this code.
-    //virtual void accept(std::weak_ptr<ASTVisitor> visitor) = 0;
+    virtual void accept(ASTVisitor &visitor);
     ASTNode(void) = default;
     virtual ~ ASTNode(void) = default;
 
@@ -30,6 +29,7 @@ protected:
 class ASTExp : public ASTNode
 {
 public:
+    virtual void accept(ASTVisitor &visitor) override;
     ASTExp(void) = default;
     virtual ~ ASTExp(void) = default;
 };
@@ -37,9 +37,13 @@ public:
 class ASTOp : public ASTExp
 {
 public:
+    virtual void accept(ASTVisitor &visitor) override;
     ASTOp(void) = default;
     ASTOp(std::shared_ptr<ASTExp> left, std::shared_ptr<ASTExp> right);
     virtual ~ ASTOp(void) = default;
+
+    std::shared_ptr<ASTExp> getLeft(void);
+    std::shared_ptr<ASTExp> getRight(void);
 
 protected:
     std::shared_ptr<ASTExp> mLeft;
@@ -49,6 +53,7 @@ protected:
 class ASTAdd : public ASTOp
 {
 public:
+    virtual void accept(ASTVisitor &visitor) override;
     ASTAdd(void) = default;
     ASTAdd(std::shared_ptr<ASTExp> left, std::shared_ptr<ASTExp> right);
     virtual ~ ASTAdd(void) = default;
@@ -57,6 +62,7 @@ public:
 class ASTSub : public ASTOp
 {
 public:
+    virtual void accept(ASTVisitor &visitor) override;
     ASTSub(void) = default;
     ASTSub(std::shared_ptr<ASTExp> left, std::shared_ptr<ASTExp> right);
     virtual ~ ASTSub(void) = default;
@@ -65,6 +71,7 @@ public:
 class ASTMul : public ASTOp
 {
 public:
+    virtual void accept(ASTVisitor &visitor) override;
     ASTMul(void) = default;
     ASTMul(std::shared_ptr<ASTExp> left, std::shared_ptr<ASTExp> right);
     virtual ~ ASTMul(void) = default;
@@ -73,6 +80,7 @@ public:
 class ASTDiv : public ASTOp
 {
 public:
+    virtual void accept(ASTVisitor &visitor) override;
     ASTDiv(void) = default;
     ASTDiv(std::shared_ptr<ASTExp> left, std::shared_ptr<ASTExp> right);
     virtual ~ ASTDiv(void) = default;
@@ -81,10 +89,13 @@ public:
 class ASTVar : public ASTExp
 {
 public:
+    virtual void accept(ASTVisitor &visitor) override;
     ASTVar(void) = default;
     ASTVar( const std::string &varName );
     ASTVar( std::string &&varName);
     virtual ~ ASTVar(void) = default;
+
+    std::string getVarName(void);
 
 private:
     std::string mVarName;
@@ -93,10 +104,13 @@ private:
 class ASTNum : public ASTExp
 {
 public:
+    virtual void accept(ASTVisitor &visitor) override;
     ASTNum(void) = default;
     ASTNum( const std::string &valueStr);
     ASTNum( std::string &&valueStr);
     virtual ~ ASTNum(void) = default;
+
+    std::string getValueStr(void);
 
 protected:
     std::string mValueStr;
@@ -106,9 +120,13 @@ protected:
 class ASTAssign: public ASTNode
 {
 public:
+    virtual void accept(ASTVisitor &visitor) override;
     ASTAssign(void) = default;
     ASTAssign( std::shared_ptr<ASTVar> left, std::shared_ptr<ASTExp> right);
     virtual ~ ASTAssign(void) = default;
+
+    std::shared_ptr<ASTVar> getLeft(void);
+    std::shared_ptr<ASTExp> getRight(void);
 
 protected:
     std::shared_ptr<ASTVar> mLeft;

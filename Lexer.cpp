@@ -3,7 +3,7 @@
 //
 
 #include <iostream>
-#include "lexer.h"
+#include "Lexer.h"
 
 using std::string;
 
