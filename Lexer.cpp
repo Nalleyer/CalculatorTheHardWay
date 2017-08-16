@@ -63,6 +63,8 @@ void Lexer::runLexer(const std::string &input)
         lastColumn = mColumn;
         updatePosition(nowState);
     }
+
+    mTokens.emplace_back(Token{TokenType::ENDL, "", 0, 0});
 }
 
 void Lexer::updatePosition(const State &nowState)

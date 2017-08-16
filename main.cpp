@@ -8,6 +8,7 @@
 #include "parser.h"
 
 #include "PrintVisitor.h"
+#include "EvalVisitor.h"
 
 using namespace std;
 
@@ -57,9 +58,18 @@ int main() {
     p.parse(tokenList);
     auto prog = p.getProg();
 
+    /* test for print */
     PrintVisitor pv;
-    for_each(prog.begin(), prog.end(), [&](auto ast){
+    for_each(prog.begin(), prog.end(), [&pv](auto ast){
         ast -> accept(pv);
+    });
+
+    cout << "----------\n";
+    /* test for eval */
+    EvalVisitor ev;
+    for_each(prog.begin(), prog.end(), [&ev](auto ast){
+        ast -> accept(ev);
+        cout << ev.getResult() << "\n";
     });
 
     return 0;
