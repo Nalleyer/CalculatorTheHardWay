@@ -7,11 +7,12 @@
 #include "Lexer.h"
 #include "parser.h"
 
-#include "PrintVisitor.h"
+//#include "PrintVisitor.h"
 #include "EvalVisitor.h"
 
 using namespace std;
 
+/*
 std::string type2Str(const TokenType & type)
 {
     switch( type )
@@ -36,8 +37,23 @@ std::ostream& operator << (std::ostream &o, const TokenType & type)
     o << type2Str(type) << " ";
     return o;
 }
-int main() {
-    ifstream ifs("input.txt");
+ */
+
+void usage(std::string const &progName)
+{
+    cout << "Usage: " << progName << " <FILE_NAME>\n";
+    exit(0);
+}
+
+int main(int argc, char *argv[]) {
+
+    if ( argc != 2)
+    {
+        std::string progName(argv[0]);
+        usage(progName);
+    }
+
+    ifstream ifs(argv[1]);
     stringstream ss;
     ss << ifs.rdbuf();
 
@@ -45,31 +61,39 @@ int main() {
     l.runLexer(ss.str());
     auto tokenList = l.getTokens();
 
+    /*
     cout << "done\n" ;
     cout << "all " << tokenList.size() << " tokens got\n";
+     */
 
     /* test for lexer */
+    /*
     for_each(tokenList.begin(),tokenList.end(), [i = 0](Token tk) mutable {
         cout << i++ << "\t{ " << tk.mTokenType << "," << ( tk.mValue == "\n" ? "\\n" : tk.mValue )
             << ", (" << tk.mLine << ", " << tk.mColumn << ") };\n";
     });
+     */
 
     Parser p;
     p.parse(tokenList);
     auto prog = p.getProg();
 
     /* test for print */
+    /*
     PrintVisitor pv;
     for_each(prog.begin(), prog.end(), [&pv](auto ast){
         ast -> accept(pv);
     });
+     */
 
-    cout << "----------\n";
     /* test for eval */
     EvalVisitor ev;
     for_each(prog.begin(), prog.end(), [&ev](auto ast){
         ast -> accept(ev);
-        cout << ev.getResult() << "\n";
+        if ( ev.getResult() != "")
+        {
+            cout << ev.getResult() << "\n";
+        }
     });
 
     return 0;
