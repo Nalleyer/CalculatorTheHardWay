@@ -25,6 +25,3 @@ area
 > calc.exe input.txt
 > 229998.995232
 ```
-
-you will get
-
