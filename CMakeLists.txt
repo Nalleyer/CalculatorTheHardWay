@@ -1,8 +1,9 @@
-cmake_minimum_required(VERSION 3.8)
+cmake_minimum_required(VERSION 3.5)
 project(Calc)
 
-set(CMAKE_CXX_STANDARD 17)
+#set(CMAKE_CXX_STANDARD 17)
+add_compile_options(-std=c++17)
 
-#set(SOURCE_FILES main.cpp lexer.cpp test_charType.cpp.test ast_node.cpp ast_node.h ast_visitor.cpp ast_visitor.h)
-set(SOURCE_FILES main.cpp lexer.cpp)
+set(SOURCE_FILES main.cpp Lexer.cpp Parser.cpp ASTNode.cpp EvalVisitor.cpp )
+#set(SOURCE_FILES main.cpp lexer.cpp)
 add_executable(Calc ${SOURCE_FILES})

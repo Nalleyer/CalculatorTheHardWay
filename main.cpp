@@ -5,7 +5,7 @@
 #include <sstream>
 
 #include "Lexer.h"
-#include "parser.h"
+#include "Parser.h"
 
 //#include "PrintVisitor.h"
 #include "EvalVisitor.h"
